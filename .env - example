@@ -1,0 +1,7 @@
+HTTP_PORT = 5005
+TOKEN_SECRET = "jack-pot-backend-13579"
+COIN_MAKET_API="34a5c805-4cc9-46d9-8a10-46ff9e2fe430"
+PRIVATE_KEY=
+COIN_MAKET_API="34a5c805-4cc9-46d9-8a10-46ff9e2fe430"
+JWT_SECRET="lakjskdlfouiouapsidf"
+NETWORK="mainnet"
