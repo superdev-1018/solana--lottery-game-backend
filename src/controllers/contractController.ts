@@ -45,6 +45,8 @@ let poolATA =  getOrCreateAssociatedTokenAccount(provider.connection, poolKeypai
 let withdrawATA =  getOrCreateAssociatedTokenAccount(provider.connection, withdrawer, gameToken, withdrawer.publicKey);
 let [globalPDA] =  PublicKey.findProgramAddressSync([Buffer.from("GLOBAL_SETTING_SEED"), initializer.publicKey.toBuffer()], program.programId);
 let [lotteryKeyInfoPDA] =  PublicKey.findProgramAddressSync([Buffer.from("LOTTERY_PDAKEY_INFO")], program.programId);
+let [winnerTickerPDA] =  PublicKey.findProgramAddressSync([Buffer.from("WINNER_TICKER_SEED")], program.programId);
+let [depositeTickerPDA] =  PublicKey.findProgramAddressSync([Buffer.from("DEPOSITE_TICKER_SEED")], program.programId);
 
 
 export const initialize = async () => {
@@ -55,6 +57,8 @@ export const initialize = async () => {
         poolTokenAccount: (await poolATA).address,
         lotteryPdakeyInfo: lotteryKeyInfoPDA,
         withdrawTokenAccount: (await withdrawATA).address,
+        winnerTicker: winnerTickerPDA,
+        depositeTicker: depositeTickerPDA,
         systemProgram: web3.SystemProgram.programId
       })
       .signers([initializer])
@@ -139,18 +143,21 @@ export const endLottery = async (i:number) => {
             });
             console.log(finalOneLottery,"Final Lottery");
 
+            let winnerTickerPDA = anchor.web3.PublicKey.findProgramAddressSync([Buffer.from("WINNER_TICKER_SEED")], program.programId);
+
             await program.methods.endLottery()
                 .accounts({
                     admin: initializer.publicKey,
                     lottery: finalOneLottery.publicKey,
                     poolTokenAccount: (await poolATA).address,
-                    taxTokenAccount: (await withdrawATA).address
+                    taxTokenAccount: (await withdrawATA).address,
+                    winnerTicker: winnerTickerPDA
                 })
                 .signers([initializer])
                 .rpc()
                 .then( async () => {
                     if (finalOneLottery.account.winner && finalOneLottery.account.winner.length >= 3) {
-                        
+
                         let winner1 = await finalOneLottery.account.winner[0];
                         let winner2 = await finalOneLottery.account.winner[1];
                         let winner3 = await finalOneLottery.account.winner[2];
