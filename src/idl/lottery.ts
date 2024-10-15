@@ -21,6 +21,16 @@ export type Lottery = {
           "isSigner": false
         },
         {
+          "name": "winnerTicker",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "depositeTicker",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "poolTokenAccount",
           "isMut": true,
           "isSigner": false
@@ -128,6 +138,11 @@ export type Lottery = {
           "isSigner": false
         },
         {
+          "name": "depositeTicker",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -165,6 +180,11 @@ export type Lottery = {
         },
         {
           "name": "taxTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "winnerTicker",
           "isMut": true,
           "isSigner": false
         },
@@ -505,6 +525,50 @@ export type Lottery = {
                 10
               ]
             }
+          }
+        ]
+      }
+    },
+    {
+      "name": "winnerTicker",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "winner",
+            "type": "publicKey"
+          },
+          {
+            "name": "timeFrame",
+            "type": "u64"
+          },
+          {
+            "name": "prize",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "depositeTicker",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "depositer",
+            "type": "publicKey"
+          },
+          {
+            "name": "timeFrame",
+            "type": "u64"
+          },
+          {
+            "name": "spots",
+            "type": "u8"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
           }
         ]
       }
@@ -612,6 +676,16 @@ export const IDL: Lottery = {
           "isSigner": false
         },
         {
+          "name": "winnerTicker",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "depositeTicker",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "poolTokenAccount",
           "isMut": true,
           "isSigner": false
@@ -719,6 +793,11 @@ export const IDL: Lottery = {
           "isSigner": false
         },
         {
+          "name": "depositeTicker",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -756,6 +835,11 @@ export const IDL: Lottery = {
         },
         {
           "name": "taxTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "winnerTicker",
           "isMut": true,
           "isSigner": false
         },
@@ -1096,6 +1180,50 @@ export const IDL: Lottery = {
                 10
               ]
             }
+          }
+        ]
+      }
+    },
+    {
+      "name": "winnerTicker",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "winner",
+            "type": "publicKey"
+          },
+          {
+            "name": "timeFrame",
+            "type": "u64"
+          },
+          {
+            "name": "prize",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "depositeTicker",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "depositer",
+            "type": "publicKey"
+          },
+          {
+            "name": "timeFrame",
+            "type": "u64"
+          },
+          {
+            "name": "spots",
+            "type": "u8"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
           }
         ]
       }

@@ -21,6 +21,16 @@
           "isSigner": false
         },
         {
+          "name": "winnerTicker",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "depositeTicker",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "poolTokenAccount",
           "isMut": true,
           "isSigner": false
@@ -128,6 +138,11 @@
           "isSigner": false
         },
         {
+          "name": "depositeTicker",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -165,6 +180,11 @@
         },
         {
           "name": "taxTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "winnerTicker",
           "isMut": true,
           "isSigner": false
         },
@@ -505,6 +525,50 @@
                 10
               ]
             }
+          }
+        ]
+      }
+    },
+    {
+      "name": "WinnerTicker",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "winner",
+            "type": "publicKey"
+          },
+          {
+            "name": "timeFrame",
+            "type": "u64"
+          },
+          {
+            "name": "prize",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DepositeTicker",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "depositer",
+            "type": "publicKey"
+          },
+          {
+            "name": "timeFrame",
+            "type": "u64"
+          },
+          {
+            "name": "spots",
+            "type": "u8"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
           }
         ]
       }
