@@ -64,12 +64,12 @@ const main = async () => {
 
       io.listen(4000);
 
-      await initialize();
-      await initLottery();
+      // await initialize();
+      // await initLottery();
 
       cron.schedule("* * * * *", async () => {
         await endLottery(0);
-        await createLottery(0);
+        // await createLottery(0);
     });
 
   } catch{(error:any)=>{

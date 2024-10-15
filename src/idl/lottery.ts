@@ -433,10 +433,7 @@ export type Lottery = {
           {
             "name": "participants",
             "type": {
-              "array": [
-                "publicKey",
-                500
-              ]
+              "vec": "publicKey"
             }
           },
           {
@@ -1012,10 +1009,7 @@ export const IDL: Lottery = {
           {
             "name": "participants",
             "type": {
-              "array": [
-                "publicKey",
-                500
-              ]
+              "vec": "publicKey"
             }
           },
           {

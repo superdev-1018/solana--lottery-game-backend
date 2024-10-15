@@ -433,10 +433,7 @@
           {
             "name": "participants",
             "type": {
-              "array": [
-                "publicKey",
-                500
-              ]
+              "vec": "publicKey"
             }
           },
           {

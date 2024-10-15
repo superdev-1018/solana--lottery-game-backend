@@ -101,9 +101,9 @@ export const initLottery = async () => {
 export const createLottery = async (i: number) => {
 
     const finalLottery = await program.account.lotteryPdaInfo.fetch(lotteryKeyInfoPDA);
-    let final_id = finalLottery.id;
+    console.log(finalLottery,"final lottery in create");
+    let final_id = finalLottery.count;
     let lotteryPDA = await getPDA([Buffer.from("LOTTERY_INFO_SEED"), initializer.publicKey.toBuffer(), new Uint8Array([final_id])], program.programId)
-    if(!final_id){final_id=20}
 
     await program.methods.createLottery(
         final_id,
