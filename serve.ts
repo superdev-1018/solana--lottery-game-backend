@@ -67,8 +67,8 @@ const main = async () => {
       // await initialize();
       // await initLottery();
 
+      await endLottery(4);
       cron.schedule("* * * * *", async () => {
-        await endLottery(0);
         // await createLottery(0);
     });
 

@@ -328,9 +328,19 @@
           "name": "user",
           "isMut": true,
           "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "userSpotIndex",
+          "type": "u8"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -570,9 +580,14 @@
       "code": 6013,
       "name": "InvalidUserAccount",
       "msg": "Invalid User Account"
+    },
+    {
+      "code": 6014,
+      "name": "StillInProgress",
+      "msg": "Lottery is in progress"
     }
   ],
   "metadata": {
-    "address": "XAoj6AeoTAyE2ALe2MEVw36Hy1GryJoPjoyfxCAdbL7"
+    "address": "GnUspD1yjkreCUDsBu6n3ow9ARZ3QMBgGcBrNeQmHx9z"
   }
 }

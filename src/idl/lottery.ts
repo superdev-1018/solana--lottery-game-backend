@@ -328,9 +328,19 @@ export type Lottery = {
           "name": "user",
           "isMut": true,
           "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "userSpotIndex",
+          "type": "u8"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -570,6 +580,11 @@ export type Lottery = {
       "code": 6013,
       "name": "InvalidUserAccount",
       "msg": "Invalid User Account"
+    },
+    {
+      "code": 6014,
+      "name": "StillInProgress",
+      "msg": "Lottery is in progress"
     }
   ]
 };
@@ -904,9 +919,19 @@ export const IDL: Lottery = {
           "name": "user",
           "isMut": true,
           "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "userSpotIndex",
+          "type": "u8"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -1146,6 +1171,11 @@ export const IDL: Lottery = {
       "code": 6013,
       "name": "InvalidUserAccount",
       "msg": "Invalid User Account"
+    },
+    {
+      "code": 6014,
+      "name": "StillInProgress",
+      "msg": "Lottery is in progress"
     }
   ]
 };

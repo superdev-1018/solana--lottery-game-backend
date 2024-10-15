@@ -147,30 +147,37 @@ export const endLottery = async (i:number) => {
                     taxTokenAccount: (await withdrawATA).address
                 })
                 .signers([initializer])
-                .rpc();
+                .rpc()
+                .then( async () => {
+                    if (finalOneLottery.account.winner && finalOneLottery.account.winner.length >= 3) {
+                        
+                        let winner1 = await finalOneLottery.account.winner[0];
+                        let winner2 = await finalOneLottery.account.winner[1];
+                        let winner3 = await finalOneLottery.account.winner[2];
+                        
+                        let winner1ATA = await getUserATA(winner1, gameToken, connection);
+                        let winner2ATA = await getUserATA(winner2, gameToken, connection);
+                        let winner3ATA = await getUserATA(winner3, gameToken, connection);
 
-            
-            let winner1 = finalOneLottery.account.winners[0];
-            let winner2 = finalOneLottery.account.winners[1];
-            let winner3 = finalOneLottery.account.winner3[2];
-            
-            let winner1ATA = await getUserATA(winner1, gameToken, connection);
-            let winner2ATA = await getUserATA(winner2, gameToken, connection);
-            let winner3ATA = await getUserATA(winner3, gameToken, connection);
+                        const txHash = await program.methods.prizeDistribution()
+                            .accounts({
+                                admin: initializer.publicKey,
+                                poolTokenAccount: (await poolATA).address,
+                                lottery: finalOneLottery.publicKey,
+                                winner1TokenAddress: winner1ATA,
+                                winner2TokenAddress: winner2ATA,
+                                winner3TokenAddress: winner3ATA,
+                                tokenProgram: TOKEN_PROGRAM_ID,
+                                systemProgram: web3.SystemProgram.programId
+                            })
+                        
+                        console.log(txHash,"success");
+                    }
+                }
+            );
 
-            await program.methods.prizeDistribution()
-                .accounts({
-                    admin: initializer.publicKey,
-                    poolTokenAccount: (await poolATA).address,
-                    lottery: finalOneLottery.publicKey,
-                    winner1TokenAddress: winner1ATA,
-                    winner2TokenAddress: winner2ATA,
-                    winner3TokenAddress: winner3ATA,
-                    tokenProgram: TOKEN_PROGRAM_ID,
-                    systemProgram: web3.SystemProgram.programId
-                })
+            console.log("txhash in endlottery**********")
             
-            console.log("success");
 
         } else {
             console.log("No lotteries matched the time frame.");
