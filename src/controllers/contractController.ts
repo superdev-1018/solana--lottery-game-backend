@@ -77,13 +77,15 @@ export const initLottery = async () => {
             let lotteryPDA = await getPDA([Buffer.from("LOTTERY_INFO_SEED"), initializer.publicKey.toBuffer(), new Uint8Array([i])], program.programId)
 
             let time_frame_index = i;
+            let start_time = new Date().getTime();
             await program.methods.createLottery(
                 i,
                 time_frame_index, 
                 new BN(time_frame[i]),     
                 ticket_price[i],           
                 new BN(max_tickets[i]),
-                dev_fees[i]  
+                dev_fees[i],
+                start_time  
             )
             .accounts({
                 admin: initializer.publicKey,
@@ -107,14 +109,15 @@ export const createLottery = async (i: number) => {
     console.log(finalLottery,"final lottery in create");
     let final_id = finalLottery.count;
     let lotteryPDA = await getPDA([Buffer.from("LOTTERY_INFO_SEED"), initializer.publicKey.toBuffer(), new Uint8Array([final_id])], program.programId)
-
+    let start_time = new Date().getTime();
     await program.methods.createLottery(
         final_id,
         i, 
         new BN(time_frame[i]),     
         ticket_price[i],           
         new BN(max_tickets[i]),
-        dev_fees[i]  
+        dev_fees[i],
+        start_time  
     )
     .accounts({
         admin: initializer.publicKey,

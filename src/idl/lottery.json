@@ -91,6 +91,10 @@
         {
           "name": "devFee",
           "type": "u32"
+        },
+        {
+          "name": "startTime",
+          "type": "i64"
         }
       ]
     },

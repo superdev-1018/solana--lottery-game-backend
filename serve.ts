@@ -9,6 +9,7 @@ import { createServer } from "http";
 
 import { log } from "console";
 import {initialize, initLottery, createLottery, endLottery} from "./src/controllers/contractController";
+import { time_frame } from "./src/interfaces/global";
 
 
 const router = express.Router();
@@ -45,11 +46,24 @@ if (!process.env.NETWORK || !process.env.NETWORK.startsWith('http')) {
   throw new Error('Invalid NETWORK URL; it must start with http: or https:');
 }
 
+const schedule_list = ["0 * * * *","0 */3 * * *","0 */6 * * *" ,"0 */12 * * *","0 0 * * *","0 0 * * 0","0 0 1 * *","0 0 1 */3 *", "0 0 1 */6 *", "0 0 1 1 *"];
+const time_frame_list = time_frame;
+let start_time_list: any[] = [0,0,0,0,0,0,0,0,0,0];
 
+app.use(router.post("/get_current_time", (req, res) => {
+  const lottery_time_frame = req.body.timeFrame;
+  let lottery_index = time_frame_list.indexOf(lottery_time_frame);
+  let start_time = start_time_list[lottery_index];
+  let current_time = new Date();
+  let passed_time = current_time.getTime() - new Date(start_time).getTime();
+  let rest_time = lottery_time_frame * 3600000 - passed_time;
+  res.send({rest_time});
+}));
+
+app.get("/", (req, res)=>console.log("dfdfdf"));
 
 const main = async () => {
   try{
-      console.log("*****")
       const io = new Server(httpServer, {
         cors: {
           origin: "*",
@@ -67,10 +81,17 @@ const main = async () => {
       // await initialize();
       // await initLottery();
 
-      await endLottery(2);
-      cron.schedule("* * * * *", async () => {
-        // await createLottery(0);
-    });
+      for (let i=0; i<10;i++){
+        let start_time = new Date();
+            start_time_list[i] = start_time;
+          cron.schedule(schedule_list[i], async () => {
+            // await endLottery(i);
+            // await createLottery(i);
+
+            
+        });
+      }
+      
 
   } catch{(error:any)=>{
     console.log(error);

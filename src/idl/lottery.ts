@@ -91,6 +91,10 @@ export type Lottery = {
         {
           "name": "devFee",
           "type": "u32"
+        },
+        {
+          "name": "startTime",
+          "type": "i64"
         }
       ]
     },
@@ -728,6 +732,10 @@ export const IDL: Lottery = {
         {
           "name": "devFee",
           "type": "u32"
+        },
+        {
+          "name": "startTime",
+          "type": "i64"
         }
       ]
     },
