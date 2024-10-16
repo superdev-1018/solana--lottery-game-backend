@@ -263,7 +263,7 @@ export type Lottery = {
       ]
     },
     {
-      "name": "addReferralUser",
+      "name": "buyTicketWithReferral",
       "accounts": [
         {
           "name": "buyer",
@@ -271,17 +271,7 @@ export type Lottery = {
           "isSigner": true
         },
         {
-          "name": "referralUser",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "referrer",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "lottery",
+          "name": "globalAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -296,6 +286,26 @@ export type Lottery = {
           "isSigner": false
         },
         {
+          "name": "user",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "referrer",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "lottery",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "depositeTicker",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -306,7 +316,12 @@ export type Lottery = {
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "count",
+          "type": "u8"
+        }
+      ]
     },
     {
       "name": "getUserTicket",
@@ -904,7 +919,7 @@ export const IDL: Lottery = {
       ]
     },
     {
-      "name": "addReferralUser",
+      "name": "buyTicketWithReferral",
       "accounts": [
         {
           "name": "buyer",
@@ -912,17 +927,7 @@ export const IDL: Lottery = {
           "isSigner": true
         },
         {
-          "name": "referralUser",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "referrer",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "lottery",
+          "name": "globalAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -937,6 +942,26 @@ export const IDL: Lottery = {
           "isSigner": false
         },
         {
+          "name": "user",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "referrer",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "lottery",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "depositeTicker",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -947,7 +972,12 @@ export const IDL: Lottery = {
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "count",
+          "type": "u8"
+        }
+      ]
     },
     {
       "name": "getUserTicket",

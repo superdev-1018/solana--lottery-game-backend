@@ -263,7 +263,7 @@
       ]
     },
     {
-      "name": "addReferralUser",
+      "name": "buyTicketWithReferral",
       "accounts": [
         {
           "name": "buyer",
@@ -271,17 +271,7 @@
           "isSigner": true
         },
         {
-          "name": "referralUser",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "referrer",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "lottery",
+          "name": "globalAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -296,6 +286,26 @@
           "isSigner": false
         },
         {
+          "name": "user",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "referrer",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "lottery",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "depositeTicker",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -306,7 +316,12 @@
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "count",
+          "type": "u8"
+        }
+      ]
     },
     {
       "name": "getUserTicket",

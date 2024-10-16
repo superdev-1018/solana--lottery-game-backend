@@ -82,13 +82,12 @@ const main = async () => {
       // await initLottery();
 
       for (let i=0; i<10;i++){
-        let start_time = new Date();
-            start_time_list[i] = start_time;
+        
           cron.schedule(schedule_list[i], async () => {
-            // await endLottery(i);
-            // await createLottery(i);
-
-            
+            await endLottery(i);
+            await createLottery(i);
+            let start_time = new Date();
+            start_time_list[i] = start_time;
         });
       }
       
