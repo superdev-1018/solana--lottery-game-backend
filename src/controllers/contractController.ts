@@ -48,17 +48,16 @@ let [lotteryKeyInfoPDA] =  PublicKey.findProgramAddressSync([Buffer.from("LOTTER
 let [winnerTickerPDA] =  PublicKey.findProgramAddressSync([Buffer.from("WINNER_TICKER_SEED")], program.programId);
 let [depositeTickerPDA] =  PublicKey.findProgramAddressSync([Buffer.from("DEPOSITE_TICKER_SEED")], program.programId);
 
-
 export const initialize = async () => {
 
     const txHash = await program.methods.initialize()
       .accounts({
         globalAccount: globalPDA,
-        poolTokenAccount: (await poolATA).address,
         lotteryPdakeyInfo: lotteryKeyInfoPDA,
-        withdrawTokenAccount: (await withdrawATA).address,
         winnerTicker: winnerTickerPDA,
         depositeTicker: depositeTickerPDA,
+        // poolTokenAccount: (await poolATA).address,
+        // withdrawTokenAccount: (await withdrawATA).address,
         systemProgram: web3.SystemProgram.programId
       })
       .signers([initializer])
@@ -142,8 +141,6 @@ export const endLottery = async (i:number) => {
                 return (prev.account.id > current.account.id) ? prev : current;
             });
             console.log(finalOneLottery,"Final Lottery");
-
-            let winnerTickerPDA = anchor.web3.PublicKey.findProgramAddressSync([Buffer.from("WINNER_TICKER_SEED")], program.programId);
 
             await program.methods.endLottery()
                 .accounts({

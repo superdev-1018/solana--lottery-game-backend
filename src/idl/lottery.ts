@@ -31,16 +31,6 @@ export type Lottery = {
           "isSigner": false
         },
         {
-          "name": "poolTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "withdrawTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -376,14 +366,6 @@ export type Lottery = {
           {
             "name": "isInitialized",
             "type": "u8"
-          },
-          {
-            "name": "poolTokeAccount",
-            "type": "publicKey"
-          },
-          {
-            "name": "withdrawTokenAccount",
-            "type": "publicKey"
           }
         ]
       }
@@ -686,16 +668,6 @@ export const IDL: Lottery = {
           "isSigner": false
         },
         {
-          "name": "poolTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "withdrawTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -1031,14 +1003,6 @@ export const IDL: Lottery = {
           {
             "name": "isInitialized",
             "type": "u8"
-          },
-          {
-            "name": "poolTokeAccount",
-            "type": "publicKey"
-          },
-          {
-            "name": "withdrawTokenAccount",
-            "type": "publicKey"
           }
         ]
       }

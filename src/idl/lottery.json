@@ -31,16 +31,6 @@
           "isSigner": false
         },
         {
-          "name": "poolTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "withdrawTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -376,14 +366,6 @@
           {
             "name": "isInitialized",
             "type": "u8"
-          },
-          {
-            "name": "poolTokeAccount",
-            "type": "publicKey"
-          },
-          {
-            "name": "withdrawTokenAccount",
-            "type": "publicKey"
           }
         ]
       }
@@ -652,6 +634,6 @@
     }
   ],
   "metadata": {
-    "address": "GnUspD1yjkreCUDsBu6n3ow9ARZ3QMBgGcBrNeQmHx9z"
+    "address": "8JgYsnrp8ASKABP7hnma1j8DTaU4F31hwJoPXB96SZwL"
   }
 }
