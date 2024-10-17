@@ -85,7 +85,7 @@ export const initLottery = async () => {
                 ticket_price[i],           
                 new BN(max_tickets[i]),
                 dev_fees[i],
-                start_time  
+                new BN(start_time)  
             )
             .accounts({
                 admin: initializer.publicKey,
@@ -117,7 +117,7 @@ export const createLottery = async (i: number) => {
         ticket_price[i],           
         new BN(max_tickets[i]),
         dev_fees[i],
-        start_time  
+        new BN(start_time)  
     )
     .accounts({
         admin: initializer.publicKey,
@@ -143,6 +143,7 @@ export const endLottery = async (i:number) => {
             const finalOneLottery = filteredLotteries.reduce((prev:any, current:any) => {
                 return (prev.account.id > current.account.id) ? prev : current;
             });
+
             console.log(finalOneLottery,"Final Lottery");
 
             await program.methods.endLottery()

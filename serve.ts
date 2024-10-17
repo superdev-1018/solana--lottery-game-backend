@@ -46,7 +46,7 @@ if (!process.env.NETWORK || !process.env.NETWORK.startsWith('http')) {
   throw new Error('Invalid NETWORK URL; it must start with http: or https:');
 }
 
-const schedule_list = ["0 * * * *","0 */3 * * *","0 */6 * * *" ,"0 */12 * * *","0 0 * * *","0 0 * * 0","0 0 1 * *","0 0 1 */3 *", "0 0 1 */6 *", "0 0 1 1 *"];
+const schedule_list = ["* * * * *","0 */3 * * *","0 */6 * * *" ,"0 */12 * * *","0 0 * * *","0 0 * * 0","0 0 1 * *","0 0 1 */3 *", "0 0 1 */6 *", "0 0 1 1 *"];
 const time_frame_list = time_frame;
 let start_time_list: any[] = [0,0,0,0,0,0,0,0,0,0];
 
@@ -59,8 +59,6 @@ app.use(router.post("/get_current_time", (req, res) => {
   let rest_time = lottery_time_frame * 3600000 - passed_time;
   res.send({rest_time});
 }));
-
-app.get("/", (req, res)=>console.log("dfdfdf"));
 
 const main = async () => {
   try{
@@ -84,8 +82,14 @@ const main = async () => {
       for (let i=0; i<10;i++){
         
           cron.schedule(schedule_list[i], async () => {
-            await endLottery(i);
-            await createLottery(i);
+            await endLottery(i)
+              .then(res => {
+                console.log(res,"this is result")
+              })
+              .catch(error=>{
+                console.log(error,"this is error")
+              });
+            // await createLottery(i);
             let start_time = new Date();
             start_time_list[i] = start_time;
         });
