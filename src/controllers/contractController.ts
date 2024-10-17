@@ -185,13 +185,16 @@ export const endLottery = async (i:number) => {
             );
 
             console.log("txhash in endlottery**********")
-            
+            return true;
 
         } else {
             console.log("No lotteries matched the time frame.");
+            return true;
         }
     } catch (error) {
-        console.error("Error in endLottery:", error);
+        // console.error("Error in endLottery:", error);
+        return false;
+        
     }
 };
         

@@ -85,10 +85,14 @@ const main = async () => {
             await endLottery(i)
               .then(async (res) => {
                 console.log(res,"this is result")
-                await createLottery(i);
-                let start_time = new Date();
-                start_time_list[i] = start_time;
-                console.log("successfully created!")
+                if(res == false){
+                  console.log("Lottery have not enough participant or already ended!")
+                } else {
+                  await createLottery(i);
+                  let start_time = new Date();
+                  start_time_list[i] = start_time;
+                  console.log("successfully created!")
+                }
               })
               .catch(error=>{
                 console.log(error,"this is error")
