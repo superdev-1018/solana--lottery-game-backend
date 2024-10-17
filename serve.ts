@@ -83,15 +83,16 @@ const main = async () => {
         
           cron.schedule(schedule_list[i], async () => {
             await endLottery(i)
-              .then(res => {
+              .then(async (res) => {
                 console.log(res,"this is result")
+                await createLottery(i);
+                let start_time = new Date();
+                start_time_list[i] = start_time;
+                console.log("successfully created!")
               })
               .catch(error=>{
                 console.log(error,"this is error")
               });
-            // await createLottery(i);
-            let start_time = new Date();
-            start_time_list[i] = start_time;
         });
       }
       
