@@ -370,6 +370,58 @@
           "type": "u8"
         }
       ]
+    },
+    {
+      "name": "refundToUser",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "lottery",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "participantTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "setLotteryState",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "lottery",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
     }
   ],
   "accounts": [
@@ -653,6 +705,6 @@
     }
   ],
   "metadata": {
-    "address": "8JgYsnrp8ASKABP7hnma1j8DTaU4F31hwJoPXB96SZwL"
+    "address": "6335gXcANhi2LHintfR456frv3KC588j7bNxEoScBSMS"
   }
 }

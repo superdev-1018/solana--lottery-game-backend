@@ -27,22 +27,24 @@ export const getPDA = async ( seeds: (Buffer | Uint8Array)[], programId: anchor.
     return pdaKey;
 }
 
+
 export const getUserATA = async (userPubkey: web3.PublicKey, gameToken: web3.PublicKey, connection: web3.Connection) => {
 
-    const wallet = Keypair.generate();
+  const wallet = await getKeypair(process.env.INITIALIZER_PRIVATE_KEY);
     
     const associatedTokenAddress = await getAssociatedTokenAddress(gameToken, userPubkey,false)
 
     let userAssociatedTokenAddress;
     const accountInfo = await connection.getAccountInfo(associatedTokenAddress)
 
+  
     if (accountInfo) {
       console.log("auccount exist");
       userAssociatedTokenAddress = associatedTokenAddress
     } else {
       const transaction = new Transaction().add(
         createAssociatedTokenAccountInstruction(
-          userPubkey,
+          wallet.publicKey,
           associatedTokenAddress,
           userPubkey,
           gameToken,
@@ -51,7 +53,7 @@ export const getUserATA = async (userPubkey: web3.PublicKey, gameToken: web3.Pub
         )
       )
 
-      transaction.feePayer = userPubkey
+      transaction.feePayer = wallet.publicKey;
       const { blockhash } = await connection.getLatestBlockhash()
       transaction.recentBlockhash = blockhash
       transaction.sign(wallet);

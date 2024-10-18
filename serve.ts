@@ -46,7 +46,7 @@ if (!process.env.NETWORK || !process.env.NETWORK.startsWith('http')) {
   throw new Error('Invalid NETWORK URL; it must start with http: or https:');
 }
 
-const schedule_list = ["* * * * *","0 */3 * * *","0 */6 * * *" ,"0 */12 * * *","0 0 * * *","0 0 * * 0","0 0 1 * *","0 0 1 */3 *", "0 0 1 */6 *", "0 0 1 1 *"];
+const schedule_list = ["0 * * * *","0 */3 * * *","0 */6 * * *" ,"0 */12 * * *","0 0 * * *","0 0 * * 0","0 0 1 * *","0 0 1 */3 *", "0 0 1 */6 *", "0 0 1 1 *"];
 const time_frame_list = time_frame;
 let start_time_list: any[] = [0,0,0,0,0,0,0,0,0,0];
 
@@ -76,29 +76,59 @@ const main = async () => {
 
       io.listen(4000);
 
-      // await initialize();
-      // await initLottery();
+      await initialize()
+        .then(async (res) => {
+          if(res == true){
+            console.log(res,"res")
+            await initLottery();
+            for (let i=0;i<10;i++){
+              let start_time = new Date();
+              start_time_list[i] = start_time;
+            }
+          } else {
+            console.log("Already Initialized!");
+          }
+        });
 
-      for (let i=0; i<10;i++){
-        
-          cron.schedule(schedule_list[i], async () => {
-            await endLottery(i)
+     
+        await endLottery(1)
               .then(async (res) => {
-                console.log(res,"this is result")
-                if(res == false){
+                console.log(res,"*******")
+                if(res == undefined || res == false){
                   console.log("Lottery have not enough participant or already ended!")
                 } else {
-                  await createLottery(i);
+                  console.log(res,"res in create")
+                  await createLottery(1);
                   let start_time = new Date();
-                  start_time_list[i] = start_time;
+                  start_time_list[1] = start_time;
                   console.log("successfully created!")
                 }
               })
               .catch(error=>{
                 console.log(error,"this is error")
               });
-        });
-      }
+             
+
+      // for (let i=0; i<10;i++){
+        
+      //     cron.schedule(schedule_list[i], async () => {
+      //       await endLottery(i)
+      //         .then(async (res) => {
+      //           console.log(res,"this is result")
+      //           if(res == false){
+      //             console.log("Lottery have not enough participant or already ended!")
+      //           } else {
+      //             await createLottery(i);
+      //             let start_time = new Date();
+      //             start_time_list[i] = start_time;
+      //             console.log("successfully created!")
+      //           }
+      //         })
+      //         .catch(error=>{
+      //           console.log(error,"this is error")
+      //         });
+      //   });
+      // }
       
 
   } catch{(error:any)=>{

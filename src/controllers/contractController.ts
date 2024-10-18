@@ -49,24 +49,29 @@ let [winnerTickerPDA] =  PublicKey.findProgramAddressSync([Buffer.from("WINNER_T
 let [depositeTickerPDA] =  PublicKey.findProgramAddressSync([Buffer.from("DEPOSITE_TICKER_SEED")], program.programId);
 
 export const initialize = async () => {
-
-    const txHash = await program.methods.initialize()
-      .accounts({
-        globalAccount: globalPDA,
-        lotteryPdakeyInfo: lotteryKeyInfoPDA,
-        winnerTicker: winnerTickerPDA,
-        depositeTicker: depositeTickerPDA,
-        // poolTokenAccount: (await poolATA).address,
-        // withdrawTokenAccount: (await withdrawATA).address,
-        systemProgram: web3.SystemProgram.programId
-      })
-      .signers([initializer])
-      .rpc()
-      .catch((error: any) => {
-        console.log("Transaction Error", error);
-      });
-      const globalAccount = await program.account.globalAccount.fetch(globalPDA);
-      console.log(globalAccount)
+    const accountInfo = await connection.getAccountInfo(globalPDA);
+    if (!accountInfo){
+        const txHash = await program.methods.initialize()
+        .accounts({
+          globalAccount: globalPDA,
+          lotteryPdakeyInfo: lotteryKeyInfoPDA,
+          winnerTicker: winnerTickerPDA,
+          depositeTicker: depositeTickerPDA,
+          // poolTokenAccount: (await poolATA).address,
+          // withdrawTokenAccount: (await withdrawATA).address,
+          systemProgram: web3.SystemProgram.programId
+        })
+        .signers([initializer])
+        .rpc()
+        .catch((error: any) => {
+          console.log("Transaction Error", error);
+        });
+        const globalAccount = await program.account.globalAccount.fetch(globalPDA);
+        console.log(globalAccount)
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
@@ -131,70 +136,129 @@ export const createLottery = async (i: number) => {
 
 }
 
-
 export const endLottery = async (i:number) => {
     try {
-        const lotteries = await program.account.lottery.all();
-        console.log(`Number of lotteries fetched: ${lotteries.length}`);
+            const lotteries = await program.account.lottery.all();
+            console.log(`Number of lotteries fetched: ${lotteries.length}`);
 
-        const filteredLotteries = lotteries.filter((lottery: any) => lottery.account.timeFrame.eq(new BN(time_frame[i])));
+            const filteredLotteries = lotteries.filter((lottery: any) => lottery.account.timeFrame.eq(new BN(time_frame[i])));
 
-        if (filteredLotteries.length > 0) {
-            const finalOneLottery = filteredLotteries.reduce((prev:any, current:any) => {
-                return (prev.account.id > current.account.id) ? prev : current;
-            });
+            if (filteredLotteries.length > 0) {
+                const finalOneLottery = filteredLotteries.reduce((prev:any, current:any) => {
+                    return (prev.account.id > current.account.id) ? prev : current;
+                });
+     
+                console.log(finalOneLottery,"Final Lottery");
+                // call endLottery for final lottery regarding to timeframe.
+                const endTxHash = await program.methods.endLottery()
+                    .accounts({
+                        admin: initializer.publicKey,
+                        lottery: finalOneLottery.publicKey,
+                        poolTokenAccount: (await poolATA).address,
+                        taxTokenAccount: (await withdrawATA).address,
+                        winnerTicker: winnerTickerPDA
+                    })
+                    .signers([initializer])
+                    .rpc()
+                    .then(async (res: any) => {
+                        console.log(res, "end transaction hash value");
+                        //if endlottery is successful, then distribute the prize to winners.
+                  
+                        if ( typeof res == 'string') {
+                            console.log("lottery prize distribution")
+ 
+                            console.log(finalOneLottery.account.id)
+                            let updatedLottery = await program.account.lottery.fetch(finalOneLottery.publicKey);
+                            console.log(updatedLottery,"updatedlottery data ")
+                            let ATAs = [];
+                            console.log(updatedLottery.winner,"winners");
+                            for(let i=0;i<3;i++){
+                                console.log(updatedLottery.winner[i]);
+                                let ATA = await getUserATA(updatedLottery.winner[i], gameToken, connection);
+                                ATAs.push(ATA);
+                            } 
+                            console.log(ATAs[0],ATAs[1],ATAs[2],"ata in prize distribution");
+                                const txHash = await program.methods.prizeDistribution()
+                                    .accounts({
+                                        admin: initializer.publicKey,
+                                        poolTokenAccount: (await poolATA).address,
+                                        lottery: finalOneLottery.publicKey,
+                                        winner1TokenAccount: ATAs[0],
+                                        winner2TokenAccount: ATAs[1],
+                                        winner3TokenAccount: ATAs[2],
+                                        tokenProgram: TOKEN_PROGRAM_ID,
+                                        systemProgram: web3.SystemProgram.programId
+                                    })
+                                    .rpc()
+                                console.log(txHash,"success");
+                                return true;
+                        } else {
+                            return false;
+                        }
+                    }).catch(async (error:any)=>{
+                        console.log(error,"error in endlottery catch func");
+                        let errMessage = error.message;
 
-            console.log(finalOneLottery,"Final Lottery");
+                        // check that lottery is failed because of not enough participants.
+                        if (errMessage.includes("NotEnoughParticipants")){
+                            if (finalOneLottery.account.state == 1){console.log("state is 1 in notenoughparticipant")
+                                return true;
+                            } else {console.log("state is not 1 in not enough")
+                                let participants = finalOneLottery.account.participants;
+                                if (participants.length > 0) {console.log("length is more than 0")
+                                    // If lottery has 1~3 participants, then program will refund the ticket price.
+                                    for (let i=0;i<participants.length;i++){console.log("refund")
+                                        let participant = participants[i];
+                                        let participantATA = await getUserATA(participant, gameToken, connection);
+                                        console.log(participantATA, "ata in refund")
+                                        await program.methods.refundToUser()
+                                            .accounts({
+                                                admin: initializer.publicKey,
+                                                lottery: finalOneLottery.publicKey,
+                                                poolTokenAccount: (await poolATA).address,
+                                                participantTokenAccount: participantATA,
+                                                tokenProgram: TOKEN_PROGRAM_ID,
+                                                systemProgram: web3.SystemProgram.programId
+                                            })
+                                            .rpc();
+                                    }
 
-            await program.methods.endLottery()
-                .accounts({
-                    admin: initializer.publicKey,
-                    lottery: finalOneLottery.publicKey,
-                    poolTokenAccount: (await poolATA).address,
-                    taxTokenAccount: (await withdrawATA).address,
-                    winnerTicker: winnerTickerPDA
-                })
-                .signers([initializer])
-                .rpc()
-                .then( async () => {
-                    if (finalOneLottery.account.winner && finalOneLottery.account.winner.length >= 3) {
+                                    return true;
+                                } else { console.log("length is 0")
+                                    // If lottery has no participants, then set the lottery state to 2.
 
-                        let winner1 = await finalOneLottery.account.winner[0];
-                        let winner2 = await finalOneLottery.account.winner[1];
-                        let winner3 = await finalOneLottery.account.winner[2];
-                        
-                        let winner1ATA = await getUserATA(winner1, gameToken, connection);
-                        let winner2ATA = await getUserATA(winner2, gameToken, connection);
-                        let winner3ATA = await getUserATA(winner3, gameToken, connection);
+                                    try{console.log("change state")
+                                        await program.methods.setLotteryState()
+                                        .accounts({
+                                            admin: initializer.publicKey,
+                                            lottery: finalOneLottery.publicKey, 
+                                        }) 
+                                        .rpc();
+                                        return true;
+                                    } catch (error){
+                                        console.log(error, "error in no participant lottery transaction");
+                                        return false;
+                                    }
+                                }
+                            }
+                        } 
+                        // check that lottery has already ended.
+                        else if (errMessage.includes("LotteryAlreadyEnded")){console.log("lottery already ended")
+                            return true;
+                        } else {
+                            // other errors.  
+                            return false;
+                        }
+                    });   
 
-                        const txHash = await program.methods.prizeDistribution()
-                            .accounts({
-                                admin: initializer.publicKey,
-                                poolTokenAccount: (await poolATA).address,
-                                lottery: finalOneLottery.publicKey,
-                                winner1TokenAddress: winner1ATA,
-                                winner2TokenAddress: winner2ATA,
-                                winner3TokenAddress: winner3ATA,
-                                tokenProgram: TOKEN_PROGRAM_ID,
-                                systemProgram: web3.SystemProgram.programId
-                            })
-                        
-                        console.log(txHash,"success");
-                    }
-                }
-            );
-
-            console.log("txhash in endlottery**********")
-            return true;
-
-        } else {
-            console.log("No lotteries matched the time frame.");
-            return true;
-        }
+                    return endTxHash;
+            } else {
+                console.log("No lotteries matched the time frame.");
+                return true;
+            }
     } catch (error) {
-        // console.error("Error in endLottery:", error);
+        console.error("Error in endLottery:", error);
         return false;
-        
     }
 };
         
