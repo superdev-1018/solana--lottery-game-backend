@@ -67,3 +67,31 @@ export const getUserATA = async (userPubkey: web3.PublicKey, gameToken: web3.Pub
 }
 
 
+export const formatTime = (i: number): string => {
+  if (i ==0 ) {
+    return `HOURLY`;
+  } else if (i == 1) {
+    return `3-HOURLY`;
+  } else if (i == 2){
+    return `6-HOURLY`
+  } else if (i == 3) {
+    return `12-HOURLY`;
+  } else if (i == 4){
+    return `DAILY`
+  } else if (i == 5) {
+    return `WEEKLY`;
+  } else if (i == 6) {
+    return `MONTHLY`;
+  } else if (i == 7) {
+    return `QUARTERLY`;
+  } else if (i == 8) {
+    return `HALF-YEARLY`;
+  } else if (i == 9) {
+    return `ANNUALLY`;
+  }else {
+    const years = Math.floor(i / 8760);
+    return `${years} ${years === 1 ? 'year' : 'years'}`;
+  }
+};
+
+
