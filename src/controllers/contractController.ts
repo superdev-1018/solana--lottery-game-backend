@@ -196,16 +196,18 @@ export const endLottery = async (i:number) => {
                             return false;
                         }
                     }).catch(async (error:any)=>{
-                        console.log(error,"error in endlottery catch func");
                         let errMessage = error.message;
 
                         // check that lottery is failed because of not enough participants.
                         if (errMessage.includes("NotEnoughParticipants")){
-                            if (finalOneLottery.account.state == 1){console.log("state is 1 in notenoughparticipant")
-                                return true;
-                            } else {console.log("state is not 1 in not enough")
+                            if (finalOneLottery.account.state == 1){
+                                console.log("state is 1 in notenoughparticipant")
+                                return false;
+                            } else {
+                                console.log("state is not 1 in not enough")
                                 let participants = finalOneLottery.account.participants;
-                                if (participants.length > 0) {console.log("length is more than 0")
+                                if (participants.length > 0) {
+                                    console.log("length is more than 0")
                                     // If lottery has 1~3 participants, then program will refund the ticket price.
                                     for (let i=0;i<participants.length;i++){console.log("refund")
                                         let participant = participants[i];
@@ -223,27 +225,17 @@ export const endLottery = async (i:number) => {
                                             .rpc();
                                     }
 
-                                    return true;
-                                } else { console.log("length is 0")
+                                    return "restart";
+                                } else { 
+                                    console.log("length is 0")
                                     // If lottery has no participants, then set the lottery state to 2.
-
-                                    try{console.log("change state")
-                                        await program.methods.setLotteryState()
-                                        .accounts({
-                                            admin: initializer.publicKey,
-                                            lottery: finalOneLottery.publicKey, 
-                                        }) 
-                                        .rpc();
-                                        return true;
-                                    } catch (error){
-                                        console.log(error, "error in no participant lottery transaction");
-                                        return false;
-                                    }
+                                    return "restart";
                                 }
                             }
                         } 
                         // check that lottery has already ended.
-                        else if (errMessage.includes("LotteryAlreadyEnded")){console.log("lottery already ended")
+                        else if (errMessage.includes("LotteryAlreadyEnded")){
+                            console.log("lottery already ended")
                             return true;
                         } else {
                             // other errors.  
